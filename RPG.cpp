@@ -128,28 +128,45 @@ public:
             }
         }
 
-        if (personagem1->getPV() <= 0 && personagem2->getPV() > 0) {
-            personagem2->adicionarDerrotado(personagem1);
-            cout << "\t\t" << personagem2->getNome() << " venceu!" << endl;
-        }
-        else if (personagem2->getPV() <= 0 && personagem1->getPV() > 0) {
-            personagem1->adicionarDerrotado(personagem2);
+        int danoTotalPersonagem1 = personagem1->getDanoTotalCausado();
+        int danoTotalPersonagem2 = personagem2->getDanoTotalCausado();
+
+if (rounds == 10 || personagem1->getPV() <= 0 || personagem2->getPV() <= 0) {
+}
+
+if (personagem1->getPV() <= 0 && personagem2->getPV() > 0) {
+    personagem2->adicionarDerrotado(personagem1);
+    cout << "\t\t" << personagem2->getNome() << " venceu!" << endl;
+}
+else if (personagem2->getPV() <= 0 && personagem1->getPV() > 0) {
+    personagem1->adicionarDerrotado(personagem2);
+    cout << "\t\t" << personagem1->getNome() << " venceu!" << endl;
+}
+else {
+    int ataquePersonagem1 = personagem1->getPA();
+    int ataquePersonagem2 = personagem2->getPA();
+    int vidaPersonagem1 = personagem1->getPV();
+    int vidaPersonagem2 = personagem2->getPV();
+
+    if (ataquePersonagem1 > ataquePersonagem2) {
+        cout << "\t\t" << personagem1->getNome() << " venceu!" << endl;
+    }
+    else if (ataquePersonagem2 > ataquePersonagem1) {
+        cout << "\t\t" << personagem2->getNome() << " venceu!" << endl;
+    }
+    else {
+        // Em caso de empate no ataque, ganha quem tiver mais vida
+        if (vidaPersonagem1 > vidaPersonagem2) {
             cout << "\t\t" << personagem1->getNome() << " venceu!" << endl;
         }
-        else {
-            int danoTotalPersonagem1 = personagem1->getDanoTotalCausado();
-            int danoTotalPersonagem2 = personagem2->getDanoTotalCausado();
-
-            if (danoTotalPersonagem1 > danoTotalPersonagem2 && personagem1->getPV() == 0 && personagem2->getPV() == 0) {
-                cout << "\t\t" << personagem1->getNome() << " é o vencedor com mais danos causados!" << " com ataque:" << personagem1->getPA() << endl;
-            }
-            else if (danoTotalPersonagem2 > danoTotalPersonagem1 && personagem1->getPV() == 0 && personagem2->getPV() == 0) {
-                cout << "\t\t" << personagem2->getNome() << " é o vencedor com mais danos causados!" << endl;
-            }
-            else {
-                cout << "\t" << "O combate terminou em empate, sem vencedor!" << endl;
-            }
+        else if (vidaPersonagem2 > vidaPersonagem1) {
+            cout << "\t\t" << personagem2->getNome() << " venceu!" << endl;
         }
+        else {
+            cout << "\t" << "O combate terminou em empate, sem vencedor!" << endl;
+        }
+    }
+}
 
         exibirEstatisticasCombate(personagem1, personagem2);
     }
@@ -215,7 +232,8 @@ void exibirEstatisticasCombate(Personagem* personagem1, Personagem* personagem2)
 
 };
 
-class Bruxo : public Personagem {
+class Bruxo : public Personagem { //causar dano e se curar com metade desse dano causado
+//Drenagem vital - ataca e se cura e causa sangramento
 public:
     Bruxo()
         : Personagem(gerarNomeAleatorio(), "Bruxo", gerarPV(), gerarPA(), gerarPD()) {}
@@ -234,7 +252,8 @@ private:
     }
 };
 
-class Mago : public Personagem {
+class Mago : public Personagem { // causar dano alto (maior que o bruxo pra compensar que ele nao se cura)
+//Explosão arcana - explosão de dano
 public:
     Mago()
         : Personagem(gerarNomeAleatorio(), "Mago", gerarPV(), gerarPA(), gerarPD()) {}
@@ -253,7 +272,8 @@ private:
     }
 };
 
-class Guerreiro : public Personagem {
+class Guerreiro : public Personagem { // aumenta os atributos de ataque e vida
+//Frenesi de batalha - aumenta seus atributos de ataque e defesa
 public:
     Guerreiro()
         : Personagem(gerarNomeAleatorio(), "Guerreiro", gerarPV(), gerarPA(), gerarPD()) {}
@@ -272,7 +292,8 @@ private:
     }
 };
 
-class Druida : public Personagem {
+class Druida : public Personagem { // ganha escudo
+//ataque elemental - ataque com mais chance de sangramento
 public:
     Druida()
         : Personagem(gerarNomeAleatorio(), "Druida", gerarPV(), gerarPA(), gerarPD()) {}
@@ -291,7 +312,8 @@ private:
     }
 };
 
-class Clerigo : public Personagem {
+class Clerigo : public Personagem { // se cura
+//Ascensão celestial - cura em si
 public:
     Clerigo()
         : Personagem(gerarNomeAleatorio(), "Clerigo", gerarPV(), gerarPA(), gerarPD()) {}
@@ -310,7 +332,8 @@ private:
     }
 };
 
-class Ladino : public Personagem {
+class Ladino : public Personagem { // causa dano alto e tem chance de causar sangramento
+ //Sombra mortal - dano massivo e sangramento
 public:
     Ladino()
         : Personagem(gerarNomeAleatorio(), "Ladino", gerarPV(), gerarPA(), gerarPD()) {}
@@ -336,10 +359,13 @@ int main() {
 
     Bruxo bruxo;
     Clerigo clerigo;
+    Clerigo clarigo2;
     Ladino ladino;
     Guerreiro guerreiro;
     Mago mago;
     Druida druida;
+
+
 
     jogoRPG.adicionarPersonagem(&bruxo);
     jogoRPG.adicionarPersonagem(&clerigo);
@@ -350,7 +376,7 @@ int main() {
 
     jogoRPG.listarPersonagens();
 
-    jogoRPG.iniciarCombate(&bruxo, &clerigo);
+    jogoRPG.iniciarCombate(&clarigo2, &clerigo);
 
     return 0;
 }
